@@ -1,0 +1,89 @@
+﻿@model MozambikMVC.Data.Entities.Marka
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Marka</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label"></label>
+                <select id="menu" class="form-control" asp-items="ViewBag.Menu"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label"></label>
+                <select id="subMenu" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(() => {
+            $.ajax({
+                url: "/GetSubMenus",
+                data: { id: $("#menu").val() },
+                type: "post",
+                success: function (res) {
+                    $("#subMenu").html(``);
+                    for (var i of res) {
+                        $("#subMenu").append(`<option value="${i.id}">${i.name}</option>`);
+                    }
+                }
+            });
+            $("#menu").change(function () {
+                $.ajax({
+                    url: "/GetSubMenus",
+                    data: { id: $(this).val() },
+                    type: "post",
+                    success: function (res) {
+                        $("#subMenu").html(``);
+                        for (var i of res) {
+                            $("#subMenu").append(`<option value="${i.id}">${i.name}</option>`);
+                        }
+                    }
+                });
+            })
+            $("#subMenu").change(function () {
+                $.ajax({
+                    url: "/GetCategories",
+                    data: { id: $(this).val() },
+                    type: "post",
+                    success: function (res) {
+                        $("#CategoryId").html(``);
+                        
+                        for (var i of res) {
+                            console.log(i)
+                            $("#CategoryId").append(`<option value="${i.id}">${i.name}</option>`);
+                        }
+                    }
+                });
+            })
+        })
+    </script>
+
+
+}

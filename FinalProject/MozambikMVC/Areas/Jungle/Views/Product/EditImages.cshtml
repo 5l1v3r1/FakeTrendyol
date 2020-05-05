@@ -1,0 +1,110 @@
+﻿@model IEnumerable<MozambikMVC.Data.Entities.Picture>
+@{
+    ViewData["Title"] = "EditImage";
+}
+<input type="text" id="productId" hidden />
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <a asp-action="Edit" asp-route-id="@ViewBag.Id" class="btn btn-outline-success right">Back to product</a>
+        </div>
+    </div><div class="row">
+        <div class="col-12">
+            <div><label class="alert-success" id="edited"></label></div>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var picture in Model)
+        {
+
+                <div class="card productImage" style="width: 18rem;">
+                    <img src="~/Images/@picture.PhotoUrl" alt="Card image cap" style="max-height:100px;">
+                    <div class="card-body">
+                        <input type="file" name="Image" value="" class="imageInput form-control"/>
+                        <a href="#" data-id="@picture.ID" class="btn btn-primary updatableProperty">Edit</a>
+                        <a href="#" data-id="@picture.ID" class="btn btn-primary deletableProperty">Delete</a>
+                    </div>
+                </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form asp-action="AddImage" asp-route-id="@ViewBag.Id" enctype="multipart/form-data" method="post">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="card-body">
+                            <input type="file" id="picture" name="picture" class="imageInput form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-outline-dark right">Add image</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts{
+<script>
+      
+
+        //$("#add-property").click(function (e) {
+        //    e.preventDefault();
+        //    $.ajax({
+        //        url: "/AddPropertyForEditPage",
+        //        method: "get",
+        //        data: { data: $("#productID").val() },
+        //        success: function (rs) {
+        //            $(".properies").append(rs);
+        //        }
+
+        //    })
+        //});
+        $(".deletableProperty").click(function (e) {
+            e.preventDefault();
+            var removeable = this;
+            $.ajax({
+                url: "/RemoveImage",
+                type: "POST",
+                data: { id: $(this).data("id") },
+                success: function (response) {
+                    if (response) {
+                        $(removeable).parent().parent().remove();
+                        $("#edited").text("Sekil ugurla silindi");
+                        setTimeout(() => {
+                            $("#edited").text("");
+                        }, 2000);
+                    }
+                }
+            });
+
+        })
+        $(".updatableProperty").click(function (e) {
+            e.preventDefault();
+            var pageImage = $(this).parent().siblings("img");
+            var form = new FormData();
+            form.append("image", $(this).siblings(".imageInput")[0].files[0]);
+            form.append("id", $(this).data("id"));
+            console.log(form.get("image"));
+            console.log(form.get("id"));
+            $.ajax({
+                url: "/EditImage",
+                type: "POST",
+                data: form,
+                contentType: false,
+                processData:false,
+                success: function (response) {
+                    if (response != null) {
+                       pageImage.attr("src", `/Images/${response}`)
+                        
+                        $("#edited").text("Sekil ugurla deyisdirildi");
+                        setTimeout(() => {
+                            $("#edited").text("");
+                        }, 2000);
+                    }
+                }
+            });
+
+        })
+</script>
+}

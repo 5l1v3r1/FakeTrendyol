@@ -1,0 +1,75 @@
+﻿@model MozambikMVC.Data.Entities.Product
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container">
+    <h1>Edit</h1>
+
+    <h4>Product</h4>
+    <hr />
+    <div class="row x_content">
+        <div class="col-md-7 col-sm-7">
+            <div class="product-image">
+                <img src="~/Images/@ViewBag.Pictures[0].PhotoUrl" />
+            </div>
+            <div class="product_gallery">
+                @foreach (var picture in ViewBag.Pictures)
+                {
+                    <a>
+                        <img src="~/Images/@picture.PhotoUrl" alt="Card image cap">
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="col-md-5 col-sm-5">
+            <form asp-action="Edit" id="form">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price" class="control-label"></label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Discount" class="control-label"></label>
+                    <input asp-for="Discount" class="form-control" />
+                    <span asp-validation-for="Discount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ModelID" class="control-label"></label>
+                    <select asp-for="ModelID" class="form-control" asp-items="ViewBag.ModelID"></select>
+                    <span asp-validation-for="ModelID" class="text-danger"></span>
+                </div>
+                <div class="form-group d-flex justify-content-between">
+                    <div class="form-group d-flex justify-content-between">
+                        <input type="submit" value="Save" class="btn btn-outline-primary" />
+                        <a asp-action="EditImages" asp-route-id="@Model.Id" class="btn btn-outline-info">Edit photos</a>
+                        <a asp-action="EditProperties" class="btn btn-outline-secondary" asp-route-id="@Model.Id">Edit properties</a>
+                        <a asp-action="Index" class="btn btn-outline-dark">Back to List</a>
+                    </div>
+                </div>
+
+            </form>
+            <div class="row">
+                <div class="text-muted font-weight-bold" style="font-size: 20px;">Product properties</div>
+                <div class="col-12">
+                    @foreach (var item in ViewBag.Properties)
+                    {
+                        <p><span class="font-weight-bolder">@item.Name</span> : <span class="font-weight-normal">@item.Value</span></p>
+                    }
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+

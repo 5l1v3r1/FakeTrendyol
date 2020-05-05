@@ -1,0 +1,67 @@
+﻿@model IEnumerable<MozambikMVC.Data.Entities.Order>
+
+
+
+<input value="@User.Identity.Name" hidden id="userId" />
+<div class="container">
+    <div class="row">
+        <table class="table col-12">
+            <thead>
+                <tr>
+                    <th><h3 style="color:#000000;"><strong>Sifarişin adı</strong></h3></th>
+                    <th><h3 style="color:#000000;">Sayı</h3></th>
+                    <th><h3 style="color:#000000;">Ümumi qiymət</h3></th>
+                    <th><h3 style="color:#000000;">Sifariş tarixi</h3></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    string name = item.Product.Model.Marka.Name + " " + item.Product.Model.Name + " " + item.Product.Name;
+
+                    <tr>
+                        <td><p style="color:#212121;">@name</p></td>
+                        <td><p style="color:#212121;">@item.Count</p></td>
+                        <td><p style="color:#212121;">@item.Price</p></td>
+                        <td><p style="color:#212121;">@item.OrderDate</p></td>
+                        <td>
+                            <form asp-action="Remove" asp-controller="Order" asp-area=null method="post">
+                                <input type="text" name="id" hidden value="@item.Id" />
+
+                            </form>
+                            <button class="remove btn btn-danger"><span class="glyphicon glyphicon-remove-circle"></span></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(".remove").click(function (e) {
+            swal({
+                title: "Sifarişi ləğv etmək istəyirsiz?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $(this).siblings("form").submit();
+                    } else {
+                        e.preventDefault();
+                    }
+                });
+
+        })
+
+    </script>
+
+
+}

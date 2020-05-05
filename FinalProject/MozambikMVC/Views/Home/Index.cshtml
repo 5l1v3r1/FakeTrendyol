@@ -1,0 +1,196 @@
+﻿@inject Mozambik.Data.ProductDbContext  dbContext
+@using Microsoft.EntityFrameworkCore
+@{
+    var data = dbContext.Products.Include(x => x.Model)
+                                                 .ThenInclude(x => x.Marka)
+                                                 .ThenInclude(x => x.Category).ToList();
+}
+
+
+<input value="@User.Identity.Name" hidden id="userId" />
+<!-- banner -->
+<div class="banner">
+    <div class="container">
+        <h3>Electronic Store, <span>Special Offers</span></h3>
+    </div>
+</div>
+<!-- //banner -->
+<!-- banner-bottom -->
+<div class="banner-bottom">
+    <div class="container">
+        <div class="col-12 wthree_banner_bottom_right">
+            <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                <ul id="myTab" class="nav nav-tabs" role="tablist">
+                    @{ byte count1 = 0; string clss1 = String.Empty;}
+                    @foreach (var item in dbContext.Category.ToList().Take(5))
+                    {
+                        if (count1 > 0)
+                        {
+                            clss1 = "";
+                        }
+                        else
+                        {
+                            clss1 = "active";
+                        }
+                        count1++;
+                        <li role="presentation" class="@clss1"><a href="#@item.Id" id="@item.Id-tab" role="tab" data-toggle="tab" aria-controls="@item.Id">@item.Name</a></li>
+
+                    }
+
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    @{ byte count = 0; string clss = String.Empty;}
+                    @foreach (var item in dbContext.Category.ToList().Take(5))
+                    {
+                        {
+                            if (count > 0)
+                            {
+                                clss = "";
+                            }
+                            else
+                            {
+                                clss = "active in";
+                            }
+                            count++;
+                        }
+                        <div role="tabpanel" class="tab-pane fade @clss" id="@item.Id" aria-labelledby="@item.Id-tab">
+
+                            <div class="agile_ecommerce_tabs row">
+                                @foreach (var product in data.Where(x => x.Model.Marka.CategoryId == item.Id).Take(9))
+                                {
+                                    <div class="col-md-4 col-lg-2  col-sm-6 col-12 agile_ecommerce_tab_left">
+                                        <div class="hs-wrapper">
+                                            @foreach (var picture in dbContext.Pictures.Where(x => x.ProductID == product.Id).ToList())
+                                            {
+                                                <img src="~/Images/@picture.PhotoUrl" alt=" " class="img-responsive" />
+                                            }
+                                            <div class="w3_hs_bottom">
+                                                <ul>
+                                                    <li>
+                                                        <a asp-route-id="@product.Id" asp-action="Details" asp-controller="Product" asp-area=null><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        @{string name = product.Model.Marka.Name + product.Model.Name + product.Name; }
+                                        @{var price = product.Price * (100 - product.Discount) / 100;}
+                                        <h5><a asp-route-id="@product.Id" asp-action="Details" asp-controller="Product" asp-area=null></a>@name</h5>
+                                        <div class="simpleCart_shelfItem">
+                                            @if (product.Discount > 0)
+                                            {
+                                                <p><span>@product.Price</span> <i class="item_price">@price</i></p>
+                                            }
+                                            else
+                                            {
+                                                <p> <i class="item_price">@price</i></p>
+
+                                            }
+
+                                            <div action="#" method="post">
+
+                                                <input type="hidden" name="cmd" class="price" value="@product.Price" />
+                                                <input type="hidden" name="add" class="id" value="@product.Id" />
+                                                <input type="hidden" name="w3ls_item" class="name" value="@name" />
+                                                <button type="submit" class="w3ls-cart clickedButton">Add to cart</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="clearfix"> </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"> </div>
+    </div>
+</div>
+<!-- //banner-bottom -->
+<!-- banner-bottom1 -->
+<div class="banner-bottom1">
+    <div class="agileinfo_banner_bottom1_grids">
+        <div class="col-md-7 agileinfo_banner_bottom1_grid_left">
+            <h3>Grand Opening Event With flat<span>20% <i>Discount</i></span></h3>
+            <a href="products.html">Shop Now</a>
+        </div>
+        <div class="col-md-5 agileinfo_banner_bottom1_grid_right">
+            <h4>hot deal</h4>
+            <div class="timer_wrap">
+                <div id="counter"> </div>
+            </div>
+            <script src="~/Teplatecss/js/jquery.countdown.js"></script>
+            <script src="~/Teplatecss/js/script.js"></script>
+        </div>
+        <div class="clearfix"> </div>
+    </div>
+</div>
+<!-- //banner-bottom1 -->
+<!-- new-products -->
+<div class="new-products">
+    <div class="container">
+        <h3>New Products</h3>
+        <div class="agileinfo_new_products_grids">
+            @foreach (var product in data.Where(x => x.CreatedDate <= DateTime.Today && x.CreatedDate > DateTime.Today.AddDays(-7)).Take(4))
+            {
+
+
+                <div class="col-md-3 agileinfo_new_products_grid">
+                    <div class="agile_ecommerce_tab_left agileinfo_new_products_grid1">
+                        <div class="hs-wrapper hs-wrapper1">
+                            @foreach (var picture in dbContext.Pictures.Where(x => x.ProductID == product.Id).ToList().Take(4))
+                            {
+                                <img src="~/Images/@picture.PhotoUrl" alt=" " class="img-responsive" />
+                            }
+                            <div class="w3_hs_bottom w3_hs_bottom_sub">
+                                <ul>
+                                    <li>
+                                        <a asp-action="ProductDetail" asp-route-id="@product.Id" asp-area=null><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        @{string name = product.Model.Marka.Name + product.Model.Name + product.Name; }
+                        @{var price = product.Price * (100 - product.Discount) / 100;}
+                        <h5><a href="single.html"></a>@name</h5>
+                        <div class="simpleCart_shelfItem">
+                            @if (product.Discount > 0)
+                            {
+                                <p><span>@product.Price</span> <i class="item_price">@price</i></p>
+                            }
+                            else
+                            {
+                                <p> <i class="item_price">@price</i></p>
+
+                            }
+
+                            <div action="#" method="post">
+                                <input type="hidden" name="cmd" class="price" value="@price" />
+                                <input type="hidden" name="add" class="id" value="@product.Id" />
+                                <input type="hidden" name="w3ls_item" class="name" value="@name" />
+                                <button type="submit" class="w3ls-cart">Add to cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            }
+
+
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+</div>
+<!-- //new-products -->
+<!-- newsletter -->
+<div class="newsletter">
+    <div class="container">
+        <div class="col-md-6 w3agile_newsletter_left">
+            <h3>Burada sizin reklamınız ola bilər!</h3>
+        </div>
+
+        <div class="clearfix"> </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+﻿@model List<Product>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6 w3ls_mobiles_grid_right_left">
+                    <div class="w3ls_mobiles_grid_right_grid1">
+                        <img src="~/Teplatecss/images/48.jpg" alt=" " class="img-responsive" />
+                        <div class="w3ls_mobiles_grid_right_grid1_pos1">
+                            <h3>Attractive<span> New</span> Wrist Watches</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 w3ls_mobiles_grid_right_left">
+                    <div class="w3ls_mobiles_grid_right_grid1">
+                        <img src="~/Teplatecss/images/49.jpg" alt=" " class="img-responsive" />
+                        <div class="w3ls_mobiles_grid_right_grid1_pos">
+                            <h3>Best Prices On<span> Laptop</span>Upto 50% Off</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"> </div>
+
+        <div class="col-md-12">
+            <div class="row">
+                @foreach (var product in Model)
+                {
+                    <div class="w3ls_mobiles_grid_right_grid3 col-md-4">
+                        <div class="row">
+                            <div class="col-md-4 agileinfo_new_products_grid agileinfo_new_products_grid_mobiles">
+                                <div class="agile_ecommerce_tab_left mobiles_grid row">
+                                    <div class="hs-wrapper hs-wrapper2">
+                                        @foreach (var picture in product.Pictures)
+                                        {
+                                            <img src="~/Images/@picture.PhotoUrl" alt=" " class="img-responsive" />
+                                        }
+                                        <div class="w3_hs_bottom w3_hs_bottom_sub1">
+                                            <ul>
+                                                <li>
+                                                    <a asp-action="Details" asp-controller="Product" asp-area=null asp-route-id="@product.Id" ><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    @{string name = product.Model.Marka.Name + product.Model.Name + product.Name; }
+                                    @{var price = product.Price * (100 - product.Discount) / 100;}
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-12"><h5><a asp-action="Details" asp-controller="Product" asp-area=null asp-route-id="@product.Id"></a>@name</h5></div>
+                                        <div class="simpleCart_shelfItem col-12">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    @if (product.Discount > 0)
+                                                    {
+                                                        <p><span>@product.Price</span> <i class="item_price">@price</i></p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p> <i class="item_price">@price</i></p>
+
+                                                    }
+                                                </div>         
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-12" method="post">
+
+                                                    <input type="hidden" name="cmd" class="price" value="@product.Price" />
+                                                    <input type="hidden" name="add" class="id" value="@product.Id" />
+                                                    <input type="hidden" name="w3ls_item" class="name" value="@name" />
+                                                    <button type="submit" class="w3ls-cart clickedButton">Add to cart</button>
+                                                </div>
+                                            </div>
+                                            @if (product.CreatedDate > DateTime.Now.AddDays(-7) && product.CreatedDate < DateTime.Now)
+                                            {
+                                                <div class="mobiles_grid_pos">
+                                                    <h6>New</h6>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div> </div>
+                }
+            </div>
+        </div>
+
+        <div class="clearfix"> </div>
+    </div>

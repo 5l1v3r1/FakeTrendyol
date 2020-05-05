@@ -1,0 +1,122 @@
+﻿@model List<MozambikMVC.Data.Entities.Property>
+
+<div class="row">
+    <div class="col-10">
+
+        <div class="form-group">
+            <a asp-action="Edit" asp-route-id="@ViewData["id"]" class="btn btn-outline-success right">Back to product</a>
+        </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div><label class="alert-success" id="edited"></label></div>
+        <input value="@ViewData["id"]" id="productID" hidden/>
+        <div class="container properies">
+            @foreach (var item in Model)
+            {
+                <form enctype="multipart/form-data" method="post">
+                    <div class="row mt-5 mb-5 property">
+                        <div class="col-5 form-group">
+                            <div class="row">
+                                <label asp-for="@item.Name" class="control-label col-2 align-self-center font-weight-bold"></label>
+                                <input asp-for="@item.Name" class="form-control col-10 prop-name" value="@item.Name" />
+                            </div>
+                        </div>
+                        <div class="col-5  form-group">
+                            <div class="row">
+                                <label asp-for="@item.Value" class="control-label col-2 align-self-center font-weight-bold"></label>
+                                <input asp-for="@item.Value" value="@item.Value" class="form-control col-10 prop-value" />
+                            </div>
+                        </div>
+                        <div class="col-2 ">
+                            <a href="#" data-id="@item.ID" class="updatableProperty btn btn-outline-success"><i class="fa fa-check"></i></a>
+                            <a href="#" data-id="@item.ID" class="deletableProperty btn btn-outline-danger"><i class="fa fa-times"></i></a>
+                        </div>
+                    </div>
+                </form>
+
+            }
+
+        </div>
+        <div class="add-property container">
+            <div class="row">
+                <div class="col-11 property-div">
+
+                </div>
+                <div class="col-1 ">
+                    <button class="btn btn-outline-info" id="add-property">Add</button>
+                </div>
+            </div>
+        </div>
+        @*<form asp-action="AddImage" id="mydropzone" method="post" class="dropzone" enctype="multipart/form-data">
+        </form>*@
+    </div>
+</div>
+@section Scripts{
+    <script>
+        /* BEGIN EXTERNAL SOURCE */
+        //$(function () {
+        //    var drop = null;
+        //    $("#mydropzone").dropzone({
+        //        autoProcessQueue: false,
+        //        uploadMultiple: true,
+        //        acceptedFiles: ".jpeg,.png,.gif,.jpg",
+        //        addRemoveLinks: true,
+        //        init: function () {
+        //            drop = this;
+        //                drop.autoProcessQueue();
+        //        }
+        //    });
+        //})
+
+        $("#add-property").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "/AddPropertyForEditPage",
+                method: "get",
+                data: { data: $("#productID").val() },
+                success: function (rs) {
+                    $(".properies").append(rs);
+                }
+
+            })
+        });
+        $(".deletableProperty").click(function (e) {
+            e.preventDefault();
+            var removeable = this;
+            $.ajax({
+                url: "/RemoveProperty",
+                type: "POST",
+                data: { id: $(this).data("id") },
+                success: function (response) {
+                    if (response) {
+                        console.log(typeof (response), response);
+                        $(removeable).parents(".property").remove();
+                    }
+                }
+            });
+
+        })
+        $(".updatableProperty").click(function (e) {
+            e.preventDefault();
+            console.log($(this).parents(".property").children().children().children(".prop-name").val());
+            $.ajax({
+                url: "/EditProperty",
+                type: "POST",
+                data: {
+                    id: $(this).data("id"),
+                    name: $(this).parents(".property").children().children().children(".prop-name").val(),
+                    value: $(this).parents(".property").children().children().children(".prop-value").val()
+                },
+                success: function (response) {
+                    if (response) {
+                        console.log(typeof (response), response);
+                        $("#edited").text("Property ugurla deyisdirildi");
+                        setTimeout(() => {
+                            $("#edited").text("");
+                        }, 2000);
+                    }
+                }
+            });
+
+        })
+    </script>
+}

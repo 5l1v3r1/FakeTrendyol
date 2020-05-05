@@ -1,0 +1,216 @@
+﻿@model MozambikMVC.Areas.Jungle.Models.ProductModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+    <style>
+        .bordered{
+            border: 2px solid black; 
+        }
+        .text-dark{
+            font-size:20px;
+        }
+    </style>
+
+<h1>Create</h1>
+
+<h4>ProductModel</h4>
+<hr />
+<div class="row">
+    <div class="col-12">
+        <form asp-action="Create" enctype="multipart/form-data" method="post">
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary mr-2" id="submitbuton" />
+
+                <a asp-action="Index" class="btn btn-info">Back to List</a>
+            </div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label text-dark"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price" class="control-label text-dark"></label>
+                        <input asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Discount" class="control-label text-dark"></label>
+                        <input asp-for="Discount" class="form-control" />
+                        <span asp-validation-for="Discount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Pictures" class="control-label text-dark"></label>
+                        <input asp-for="Pictures" multiple class="form-control" />
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-dark">Menu</label>
+                        <select id="menu" class="form-control" asp-items="ViewBag.Menu"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label text-dark">SubMenu</label>
+                        <select id="subMenu" class="form-control "></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label text-dark">Category</label>
+                        <select id="category" class="form-control"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="marka" class="control-label text-dark"></label>
+                        <select name="marka" id="marka" class="form-control"></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ModelID" class="control-label text-dark">Model</label>
+                        <select asp-for="ModelID" class="form-control"></select>
+                    </div>
+
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-group" id="editor">
+                        <input type="text" name="colors" id="colors" value="" hidden/>
+                        @foreach (var item in ViewBag.Colors)
+                        {
+                        <button class="btn colors" style="width:50px;height:50px;background-color:@item.Code;" data-color="@item.Id"></button>
+                            
+                        }
+                    </div> 
+                    <div class="form-group" id="editor">
+                        @foreach (var item in ViewBag.Sizes)
+                        {
+                            <input type="checkbox" value="@item.Id" name="sizes" id="sizes"><label for="sizes" class="text-dark font-weight-bold">@item.Name</label><br>
+                        }
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-group" id="editor">
+                        <label asp-for="Description" class="control-label"></label>
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group property">
+                <div class="row">
+                    <div class="col-11 property-div">
+
+                    </div>
+                    <div class="col-1">
+                        <button class="btn btn-outline-info" id="add-property">Add Property</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        @*<form asp-action="AddImage" id="mydropzone" method="post" class="dropzone" enctype="multipart/form-data">
+            </form>*@
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="https://cdn.ckeditor.com/4.13.0/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('Description');
+    </script>
+    <script>
+        $(document).ready(() => {
+            $.ajax({
+                url: "/GetSubMenus",
+                data: { id: $("#menu").val() },
+                type: "post",
+                success: function (res) {
+                    $("#subMenu").html(``);
+                    for (var i of res) {
+                        $("#subMenu").append(`<option value="${i.id}">${i.name}</option>`);
+                    }
+                }
+            });
+            $("#menu").change(function () {
+                $.ajax({
+                    url: "/GetSubMenus",
+                    data: { id: $(this).val() },
+                    type: "post",
+                    success: function (res) {
+                        $("#subMenu").html(``);
+                        for (var i of res) {
+                            $("#subMenu").append(`<option value="${i.id}">${i.name}</option>`);
+                        }
+                        $("#subMenu").change(function () {
+                            $.ajax({
+                                url: "/GetCategories",
+                                data: { id: $(this).val() },
+                                type: "post",
+                                success: function (res) {
+                                    $("#category").html(``);
+
+                                    for (var i of res) {
+                                        console.log(i)
+                                        $("#category").append(`<option value="${i.id}">${i.name}</option>`);
+                                    }
+                                    $("#category").change(function () {
+                                        $.ajax({
+                                            url: "/GetMarkas",
+                                            data: { id: $(this).val() },
+                                            type: "post",
+                                            success: function (res) {
+                                                $("#marka").html(``);
+
+                                                for (var i of res) {
+                                                    console.log(i)
+                                                    $("#marka").append(`<option value="${i.id}">${i.name}</option>`);
+                                                }
+                                                $("#marka").change(function () {
+                                                    $.ajax({
+                                                        url: "/GetModels",
+                                                        data: { id: $(this).val() },
+                                                        type: "post",
+                                                        success: function (res) {
+                                                            $("#ModelID").html(``);
+
+                                                            for (var i of res) {
+                                                                console.log(i)
+                                                                $("#ModelID").append(`<option value="${i.id}">${i.name}</option>`);
+                                                            }
+                                                        }
+                                                    });
+                                                })
+                                            }
+                                            })
+                                        });
+                                    }
+                                })
+                            });
+                        }
+                    })
+                });
+            })
+            
+            
+            
+        $(".colors").click(function (e) {
+            e.preventDefault();
+            $("#colors").val($("#colors").val()+", " + $(this).data("color"));
+            $(this).toggleClass("bordered");
+        })
+
+        $("#add-property").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "/addproperty",
+                method: "get",
+                success: function (rs) {
+                    $(".property-div").append(rs);
+                }
+
+            })
+        });
+
+    </script>
+
+}

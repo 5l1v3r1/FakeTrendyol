@@ -1,0 +1,58 @@
+﻿@model IEnumerable<MozambikMVC.Data.Entities.Product>
+
+@inject Mozambik.Data.ProductDbContext  dbContext
+@using Microsoft.EntityFrameworkCore;
+
+<input value="@User.Identity.Name" hidden id="userId" />
+<div class="banner banner2">
+    <div class="container">
+        <h2>Top Selling <span>Gadgets</span> Flat <i>25% Discount</i></h2>
+    </div>
+</div>
+
+<!-- mobiles -->
+<div class="mobiles">
+    <div class="container">
+        <div class="w3ls_mobiles_grids row mb-5">
+            <div class="col-md-12 w3ls_mobiles_grid_right " id="partialViewCaller">
+                @if (Model.Count()>0)
+                {
+
+                    await Html.RenderPartialAsync("ProductPartial2", Model);
+                }
+                else
+                {
+                    <h3 class="text-warning"><span class="fa fa-exclamation-triangle"></span> Axtarışa uyğun məlumat tapılmadı!</h3>
+                }
+            </div>
+            <div class="col-12"> 
+
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+        
+    </div>
+</div>
+<!-- Related Products -->
+<div class="w3l_related_products">
+    <div class="container">
+        <h3>Related Products</h3>
+
+        @{await Html.RenderPartialAsync("ProductPartial", dbContext.Products.Include(x => x.Model).ThenInclude(x => x.Marka).ThenInclude(x => x.Category).Include(x => x.Pictures).Take(9).ToList());}
+
+
+    </div>
+</div>
+<!-- //Related Products -->
+<!-- newsletter -->
+<div class="newsletter">
+    <div class="container">
+        <div class="col-md-6 w3agile_newsletter_left">
+            <h3>Burada sizin reklamınız ola bilər!</h3>
+        </div>
+
+        <div class="clearfix"> </div>
+    </div>
+</div>
+<!-- //newsletter -->
+

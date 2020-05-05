@@ -1,0 +1,50 @@
+﻿@model MozambikMVC.Data.Entities.Property
+<form enctype="multipart/form-data" method="post">
+    <div class="row mt-5 mb-5 property">
+        <div class="col-5 form-group">
+            <div class="row">
+                <label asp-for="Name" class="control-label col-2 align-self-center font-weight-bold"></label>
+                <input asp-for="Name" class="form-control col-10 prop-name" value="Name" />
+                <input value="@Model.ProductId" hidden />
+            </div>
+        </div>
+        <div class="col-5  form-group">
+            <div class="row">
+                <label asp-for="Value" class="control-label col-2 align-self-center font-weight-bold"></label>
+                <input asp-for="Value" value="Value" class="form-control col-10 prop-value" />
+            </div>
+        </div>
+        <div class="col-2 ">
+            <a href="#"  class="creatableProperty btn btn-outline-success"><i class="fa fa-check"></i></a>
+            <a href="#" class="deletablePropertyPartial btn btn-outline-danger"><i class="fa fa-times"></i></a>
+        </div>
+    </div>
+</form>
+<script>
+    $(".deletablePropertyPartial").click(function (e) {
+        e.preventDefault();
+        $(this).parents(".property").remove();
+    });
+    $(".creatableProperty").click(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: "/CreateProperty",
+            type: "POST",
+            data: {
+                productId: $("#productID").val(),
+                name: $(this).parents(".property").children().children().children(".prop-name").val(),
+                value: $(this).parents(".property").children().children().children(".prop-value").val()
+            },
+            success: function (response) {
+                if (response) {
+                    console.log(typeof (response), response);
+                    $("#edited").text("Property ugurla elave olundu");
+                    setTimeout(() => {
+                        $("#edited").text("");
+                    }, 2000);
+                }
+            }
+        });
+    });
+  
+</script>

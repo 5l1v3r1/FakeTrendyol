@@ -1,0 +1,162 @@
+﻿@model MozambikMVC.Data.Entities.Category
+@inject Mozambik.Data.ProductDbContext  dbContext
+@using Microsoft.EntityFrameworkCore;
+
+<input value="@User.Identity.Name" hidden id="userId" />
+<div class="banner banner2">
+    <div class="container">
+        <h2>Top Selling <span>Gadgets</span> Flat <i>25% Discount</i></h2>
+    </div>
+</div>
+<!-- breadcrumbs -->
+<div class="breadcrumb_dress">
+    <div class="container">
+        <ul>
+            <li><a href="index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> <i>/</i></li>
+            <li>@Model.Name</li>
+        </ul>
+    </div>
+</div>
+<!-- //breadcrumbs -->
+<!-- mobiles -->
+<div class="mobiles">
+    <div class="container">
+        <div class="w3ls_mobiles_grids row mb-5">
+            <div class="col-md-4 w3ls_mobiles_grid_left">
+                <div class="w3ls_mobiles_grid_left_grid">
+                    <h3>Categories</h3>
+                    <div class="w3ls_mobiles_grid_left_grid_sub">
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingOne">
+                                    <h4 class="panel-title asd">
+                                        <a class="pa_italic" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><i class="glyphicon glyphicon-minus" aria-hidden="true"></i>Brendlər
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body panel_text">
+                                        <ul>
+                                            @foreach (var item in Model.Markas)
+                                            {
+                                                <li><a href="#" class="callPartialForName" data-send="@item.Id">@item.Name</a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="w3ls_mobiles_grid_left_grid">
+                    <h3>Price</h3>
+                    <div class="w3ls_mobiles_grid_left_grid_sub">
+                        <div class="ecommerce_color ecommerce_size">
+                            <ul>
+                                <li><a href="#" class="callPartial" data-send="0">Below $ 100</a></li>
+                                <li><a href="#" class="callPartial" data-send="100">$ 100-500</a></li>
+                                <li><a href="#" class="callPartial" data-send="500">$ 500-10k</a></li>
+                                <li><a href="#" class="callPartial" data-send="10000">$ 10k-20k</a></li>
+                                <li><a href="#" class="callPartial" data-send="20000">$ Above 20k</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 w3ls_mobiles_grid_right " id="partialViewCaller">
+                @{await Html.RenderPartialAsync("ProductPartial2", dbContext.Products.Include(x => x.Model).ThenInclude(x => x.Marka).ThenInclude(x => x.Category).Include(x => x.Pictures).Where(x => x.Model.Marka.Category.Id == Model.Id).Take(9).ToList());}
+            </div>
+            
+            <div class="clearfix"> </div>
+        </div>
+        <div class=" row">
+            <div class="col-md-4 w3ls_mobiles_grid_left"></div>
+            <div class="col-md-8 w3ls_mobiles_grid_right  mt-2">
+                @{ decimal count = Math.Ceiling((decimal)dbContext.Products.Include(x => x.Model)
+                           .ThenInclude(x => x.Marka).ThenInclude(x => x.Category).Where(x => x.Model.Marka.Category.Id == Model.Id).ToList().Count / 9);}
+                @for (int i = 1; i <= count; i++)
+                {
+                    <a href="#" data-id="@i" class="btn btn-primary click">@i</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Related Products -->
+<div class="w3l_related_products">
+    <div class="container">
+        <h3>Related Products</h3>
+
+        @{await Html.RenderPartialAsync("ProductPartial", dbContext.Products.Include(x => x.Model).ThenInclude(x => x.Marka).ThenInclude(x => x.Category).Include(x => x.Pictures).Where(x => x.Model.Marka.Category.Id == Model.Id).Skip(9).ToList());}
+
+
+    </div>
+</div>
+<!-- //Related Products -->
+<!-- newsletter -->
+<div class="newsletter">
+    <div class="container">
+        <div class="col-md-6 w3agile_newsletter_left">
+            <h3>Burada sizin reklamınız ola bilər!</h3>
+        </div>
+       
+        <div class="clearfix"> </div>
+    </div>
+</div>
+<!-- //newsletter -->
+
+@section Scripts{
+    <script>
+        $(document).ready(() => {
+            $(".callPartial").click(function (e) {
+                var dataS = $(this).data("send");
+                var dataId = @Model.Id;
+                $.ajax({
+                    url: "/Product/PartialViewCaller",
+                    type: "post",
+                    data: { data: dataS, id: dataId },
+                    success: function (res) {
+                        $("#partialViewCaller").html("");
+                        $("#partialViewCaller").append(res);
+                    }
+                })
+                e.preventDefault();
+            })
+
+            $(".click").click(function (e) {
+                var dataId = @Model.Id;
+                var d = $(this).data("id");
+                console.log(d)
+                $.ajax({
+                    url: "/Product/PartialViewCaller3",
+                    type: "post",
+                    data: { number: d, id: dataId },
+                    success: function (res) {
+                        $("#partialViewCaller").html("");
+                        $("#partialViewCaller").append(res);
+                    }
+                })
+                e.preventDefault();
+            })
+
+
+            $(".callPartialForName").click(function () {
+                var data = $(this).data("send");
+                var dataId = @Model.Id;
+                $.ajax({
+                    url: "/Product/PartialViewCaller2",
+                    type: "post",
+                    data: { marka: data, id: dataId },
+                    success: function (res) {
+                        $("#partialViewCaller").html("");
+                        $("#partialViewCaller").append(res);
+                    }
+                })
+            })
+        })
+    </script>
+}

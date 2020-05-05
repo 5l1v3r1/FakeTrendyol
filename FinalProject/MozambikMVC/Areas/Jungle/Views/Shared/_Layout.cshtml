@@ -1,0 +1,216 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from colorlib.com/polygon/gentelella/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 Jan 2020 13:11:45 GMT -->
+<!-- Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="images/favicon.ico" type="image/ico" />
+    <title>Gentelella Alela! | </title>
+
+    <link href="~/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="~/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="~/vendors/nprogress/nprogress.css" rel="stylesheet">
+
+    <link href="~/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+
+    <link href="~/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+
+    <link href="~/vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet" />
+
+    <link href="~/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <link href="~/vendors/dropzone/dist/min/dropzone.min.css" rel="stylesheet" />
+    <link href="~/css/custom.min.css" rel="stylesheet">
+</head>
+<body class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col">
+                <div class="left_col scroll-view">
+                    <div class="navbar nav_title" style="border: 0;">
+                        <a asp-action="Index" asp-controller="Abouts" asp-area="Jungle" class="site_title"><i class="fa fa-paw"></i> <span>Mozambik!</span></a>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <div class="profile clearfix">
+                        <div class="profile_pic">
+                            <img src="~/images/user.png" alt="..." class="img-circle profile_img">
+                        </div>
+                        <div class="profile_info">
+                            <span>Welcome,</span>
+                            <h2>@User.Identity.Name</h2>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        <div class="menu_section">
+                            <ul class="nav side-menu">
+
+                                <li>
+                                    <a asp-action="index" asp-controller="Users" asp-area="Jungle"><i class="fa fa-list-alt"></i> Users</a>
+                                </li>
+                                <li>
+                                    <a asp-action="index" asp-controller="Abouts" asp-area="Jungle"><i class="fa fa-book"></i> About </a>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-list-alt"></i> Categories <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a asp-action="Index" asp-controller="Categories" asp-area="Jungle">Categories</a></li>
+                                        <li><a asp-action="Index" asp-controller="Menus" asp-area="Jungle">Menus</a></li>
+                                        <li><a asp-action="Index" asp-controller="SubMenus" asp-area="Jungle">SubMenus</a></li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-list-alt"></i> Products <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a asp-action="Index" asp-controller="Product" asp-area="Jungle">All Products</a></li>
+                                        <li><a asp-action="Index" asp-controller="Markas" asp-area="Jungle">Markas</a></li>
+                                        <li><a asp-action="Index" asp-controller="Models" asp-area="Jungle">Models</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-list-alt"></i>Orders<span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a asp-action="Index" asp-controller="Order" asp-area="Jungle">All orders</a></li>
+                                        <li><a asp-action="Canceled" asp-controller="Order" asp-area="Jungle">Canceled orders</a></li>
+                                        <li><a asp-action="Delivered" asp-controller="Order" asp-area="Jungle">Delivered orders</a></li>
+                                        <li><a asp-action="NotDelivered" asp-controller="Order" asp-area="Jungle">Not delivered orders</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a><i class="fa fa-list-alt"></i>Others<span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a asp-action="Index" asp-controller="Sizes" asp-area="Jungle">Sizes</a></li>
+                                        <li><a asp-action="Index" asp-controller="Colors" asp-area="Jungle">Colors</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+                   
+
+                </div>
+            </div>
+
+            <div class="top_nav">
+                <div class="nav_menu">
+                    <div class="nav toggle">
+                        <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                    </div>
+                    <nav class="nav navbar-nav">
+                        <ul class=" navbar-right">
+                            <li class="nav-item dropdown open" style="padding-left: 15px;">
+                                <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+                                    <img src="images/img.jpg" alt="">@User.Identity.Name
+                                </a>
+                                <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="javascript:;"> </a>
+                                    <a class="dropdown-item" href="javascript:;">
+                                        <span class="badge bg-red pull-right"></span>
+                                        <span>Settings</span>
+                                    </a>
+                                    <a class="dropdown-item" href="javascript:;">Help</a>
+                                    <a class="dropdown-item" asp-action="LogOut" asp-controller="Account" asp-area="Jungle"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+                                </div>
+                            </li>
+                          
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="right_col" role="main">
+                <div class="">
+                    <div class="page-title">
+                        <div class="title_left">
+                        </div>
+                        <div class="title_right">
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="row" style="display: block;">
+                        <div class="col-md-12 col-sm-12  ">
+                            <div class="x_panel">
+                                <div class="x_content">
+                                    @RenderBody()
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <footer>
+                <div class="pull-right">
+                    Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com/">Colorlib</a>
+                </div>
+                <div class="clearfix"></div>
+            </footer>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <script src="~/vendors/jquery/dist/jquery.min.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/vendors/bootstrap/dist/js/bootstrap.bundle.min.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/vendors/fastclick/lib/fastclick.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/vendors/nprogress/nprogress.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/vendors/Chart.js/dist/Chart.min.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/vendors/gauge.js/dist/gauge.min.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/vendors/iCheck/icheck.min.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/vendors/skycons/skycons.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/vendors/Flot/jquery.flot.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+    <script src="~/vendors/Flot/jquery.flot.pie.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+    <script src="~/vendors/Flot/jquery.flot.time.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+    <script src="~/vendors/Flot/jquery.flot.stack.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+    <script src="~/vendors/Flot/jquery.flot.resize.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/vendors/flot.orderbars/js/jquery.flot.orderBars.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+    <script src="~/vendors/flot-spline/js/jquery.flot.spline.min.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+    <script src="~/vendors/flot.curvedlines/curvedLines.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/vendors/DateJS/build/date.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/vendors/jqvmap/dist/jquery.vmap.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+    <script src="~/vendors/jqvmap/dist/maps/jquery.vmap.world.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+    <script src="~/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/vendors/moment/min/moment.min.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+    <script src="~/vendors/bootstrap-daterangepicker/daterangepicker.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+
+    <script src="~/js/custom.min.js" type="4df8918ae1c71cadfc0c6831-text/javascript"></script>
+    <script src="~/ajax.cloudflare.com/cdn-cgi/scripts/7089c43e/cloudflare-static/rocket-loader.min.js" data-cf-settings="4df8918ae1c71cadfc0c6831-|49" defer=""></script>
+
+    <script src="~/vendors/dropzone/dist/min/dropzone.min.js"></script>
+    @RenderSection("Scripts", false)
+</body>
+
+<!-- Mirrored from colorlib.com/polygon/gentelella/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 Jan 2020 13:12:25 GMT -->
+</html>

@@ -1,0 +1,61 @@
+﻿@model LoginModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from colorlib.com/polygon/gentelella/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 Jan 2020 13:12:48 GMT -->
+<!-- Added by HTTrack -->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mozambik! | </title>
+
+    <link href="~/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="~/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="~/vendors/nprogress/nprogress.css" rel="stylesheet">
+
+    <link href="~/vendors/animate.css/animate.min.css" rel="stylesheet">
+
+    <link href="~/css/custom.min.css" rel="stylesheet">
+</head>
+<body class="login">
+    <div>
+        <a class="hiddenanchor" id="signup"></a>
+        <a class="hiddenanchor" id="signin"></a>
+        <div class="login_wrapper">
+            <div class="animate form login_form">
+                <section class="login_content">
+                    <form asp-action="Login" asp-controller="Account" asp-area="Jungle" method="post">
+                        <h1>Login Form</h1>
+                        <div>
+                            <input asp-for="Email" class="form-control" placeholder="Username" required="" />
+                        </div>
+                        <div>
+                            <input asp-for="Password" class="form-control" placeholder="Password" required="" />
+                        </div>
+                        <div>
+                            <button class="btn btn-default submit" type="submit">Log in</button>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="separator">
+                            <div class="clearfix"></div>
+                            <br />
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!-- Mirrored from colorlib.com/polygon/gentelella/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 Jan 2020 13:12:48 GMT -->
+</html>

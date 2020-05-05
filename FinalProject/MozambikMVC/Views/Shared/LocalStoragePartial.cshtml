@@ -1,0 +1,149 @@
+﻿@model LocalStorageModel[]
+@using System.Linq;
+@{
+    var sum = Model.Sum(x => x.Price);
+}
+<input value="@User.Identity.Name" hidden id="user" />
+<form method="post" class="" action="products.html" target="" id="mainForm">
+    <button type="button" id="hideBag" class="sbmincart-closer">×</button>
+    <ul>
+        @if (Model.Length > 0)
+        {
+            int count = 0;
+            @foreach (var item in Model)
+            {
+                <li class="sbmincart-item">
+                    <div class="sbmincart-details-name">
+                        <a class="sbmincart-name" href="http://127.0.0.1:5500/web/index.html">@item.Name</a>
+                        <ul class="sbmincart-attributes">
+                        </ul>
+                    </div>
+                    <div class="sbmincart-details-quantity">
+                        <input class="sbmincart-quantity" data-sbmincart-idx="0" name="quantity_1" type="text" pattern="[0-9]*" value="@item.Quantity" autocomplete="off">
+                    </div>
+                    <div class="sbmincart-details-remove">
+                        <button type="button" class="sbmincart-remove" data-sbmincart-idx="0">×</button>
+                    </div>
+                    <div class="sbmincart-details-price">
+                        <span class="sbmincart-price">@item.Price</span>
+                    </div>
+                    <input type="hidden" name="LSModel[@count].Name" value="@item.Name">
+                    <input type="hidden" name="LSModel[@count].Quantity" value="@item.Quantity">
+                    <input type="hidden" class="id" name="LSModel[@count].ID" value="@item.Id">
+                    <input type="hidden" class="price" name="LSModel[@count].Price" value="@item.Price">
+                </li>
+                count++;
+            }
+        }
+        else
+        {
+            <li class="sbmincart-item"><p>Your shopping cart is empty</p></li>
+
+        }
+
+    </ul>
+    <div class="sbmincart-footer">
+        <div class="sbmincart-subtotal">
+            Subtotal: @sum AZN
+        </div>
+        <button class="sbmincart-submit" type="submit" data-sbmincart-alt="undefined">Buy</button>
+    </div>
+</form>
+
+<script>
+    $(".sbmincart-remove").click(function () {
+    var removedId = $(this).parent().siblings(".id").val();
+    var storageData = JSON.parse(localStorage.getItem("@User.Identity.Name"));
+    for (var i in storageData) {
+        if (storageData[i].id == removedId) {
+            storageData.splice(i, 1);
+            break;
+        }
+    }
+     $.ajax({
+            url: "/home/PartialView",
+            type: "POST",
+            data: { LSModel: storageData },
+            success: function (res) {
+                $("#w3lssbmincart").html("");
+                $("#w3lssbmincart").append(res);
+                $("#hideBag").click(() => {
+                    $("#w3lssbmincart").hide();
+                    $("#w3lssbmincart").html("");
+                });
+            }
+        })
+    $("#w3lssbmincart").show();
+    storageData = JSON.stringify(storageData);
+    localStorage.setItem("@User.Identity.Name", storageData);
+    });
+
+     $(".sbmincart-submit").click(function (e) {
+       
+         $.ajax({
+             url: "/Order/Buy",
+             type: "Post",
+             data: { LSModel: JSON.parse(localStorage.getItem("@User.Identity.Name")) },
+             success: function (res) {
+                 if (res) {
+
+                     swal({
+                         title: "Sifarisiniz qebul olundu!",
+                         text: "Əlavə məlumat üçün sifarişlər səhifəsinə keçin!",
+                         icon: "success",
+                     });
+                     localStorage.clear("@User.Identity.Name");
+                     AjaxOP(JSON.parse(localStorage.getItem("@User.Identity.Name")));
+                      $("#w3lssbmincart").show();
+                 } else {
+                      swal({
+                    title: "Sifarisiniz qebul olunmadi!",
+                    text: "Bir daha yoxlayın!",
+                    icon: "error",
+                 });
+                 }
+             },
+         })
+          e.preventDefault();
+    })
+
+    $(".sbmincart-quantity").change(function () {
+        if (Number.isInteger(parseInt($(this).val()))) {
+             var changableId = $(this).parent().siblings(".id").val();
+             var storageData = JSON.parse(localStorage.getItem("@User.Identity.Name"));
+             for (var i in storageData) {
+                if (storageData[i].id == changableId&&Number.isInteger(parseInt($(this).val()))) {
+
+                  if (parseInt($(this).val()) <= 0) {
+                        storageData.splice(i, 1);
+                  } else {
+                      storageData[i].quantity = parseInt($(this).val());
+                      storageData[i].price = parseInt($(this).val()) * parseFloat(storageData[i].price_1)
+                    }
+                    break;
+                }
+            }
+            AjaxOP(storageData);
+    $("#w3lssbmincart").show();
+    storageData = JSON.stringify(storageData);
+    localStorage.setItem("@User.Identity.Name", storageData);
+
+        }
+
+    })
+    function AjaxOP(data) {
+        $.ajax({
+            url: "/home/PartialView",
+            type: "POST",
+            data: { LSModel: data },
+            success: function (res) {
+                $("#w3lssbmincart").html("");
+                $("#w3lssbmincart").append(res);
+                $("#hideBag").click(() => {
+                    $("#w3lssbmincart").hide();
+                    $("#w3lssbmincart").html("");
+                });
+            }
+        })
+    }
+</script>

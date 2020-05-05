@@ -1,0 +1,74 @@
+﻿@model List<Product>
+<ul id="flexiselDemo2">
+    @foreach (var item in Model)
+    {
+        <li>
+            <div class="w3l_related_products_grid">
+                <div class="agile_ecommerce_tab_left mobiles_grid">
+                    <div class="hs-wrapper hs-wrapper3">
+                        @foreach (var picture in item.Pictures.Where(x => x.ProductID == item.Id).ToList())
+                        {
+                            <img src="~/Images/@picture.PhotoUrl" alt=" " class="img-responsive" />
+                        }
+                        <div class="w3_hs_bottom">
+                            <div class="flex_ecommerce">
+                                <a asp-action="Details" asp-controller="Product" asp-area=null asp-route-id="@item.Id"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                    @{string name = item.Model.Marka.Name + item.Model.Name + item.Name; }
+                    @{var price = item.Price * (100 - item.Discount) / 100;}
+                    <h5><a asp-action="Details" asp-controller="Product" asp-area=null asp-route-id="@item.Id"></a>@name</h5>
+                    <div class="simpleCart_shelfItem">
+                        @if (item.Discount > 0)
+                        {
+                            <p><span>@item.Price</span> <i class="item_price">@price</i></p>
+                        }
+                        else
+                        {
+                            <p> <i class="item_price">@price</i></p>
+
+                        }
+
+                        <div action="#" method="post">
+
+                            <input type="hidden" name="cmd" class="price" value="@item.Price" />
+                            <input type="hidden" name="add" class="id" value="@item.Id" />
+                            <input type="hidden" name="w3ls_item" class="name" value="@name" />
+                            <button type="submit" class="w3ls-cart clickedButton">Add to cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    }
+</ul>
+
+<script type="text/javascript">
+            $(window).load(function () {
+                $("#flexiselDemo2").flexisel({
+                    visibleItems: 4,
+                    animationSpeed: 1000,
+                    autoPlay: true,
+                    autoPlaySpeed: 3000,
+                    pauseOnHover: true,
+                    enableResponsiveBreakpoints: true,
+                    responsiveBreakpoints: {
+                        portrait: {
+                            changePoint: 568,
+                            visibleItems: 1
+                        },
+                        landscape: {
+                            changePoint: 667,
+                            visibleItems: 2
+                        },
+                        tablet: {
+                            changePoint: 768,
+                            visibleItems: 3
+                        }
+                    }
+                });
+
+            });
+</script>
+<script type="text/javascript" src="~/Teplatecss/js/jquery.flexisel.js"></script>
