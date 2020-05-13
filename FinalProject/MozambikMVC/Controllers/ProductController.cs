@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Mozambik.Data;
 using MozambikMVC.Data.Entities;
 using MozambikMVC.Models;
+using ReflectionIT.Mvc.Paging;
 
 namespace MozambikMVC.Controllers
 {
@@ -21,9 +22,30 @@ namespace MozambikMVC.Controllers
             _manager = userManager;
             _dbContext = dbContext;
         }
-        public IActionResult Index(int id)
+        public IActionResult Index(int id,int page = 1)
         {
-            return View(_dbContext.Category.Include(x=>x.Markas).FirstOrDefaultAsync(x=>x.Id==id).Result);
+            ViewBag.Markas = _dbContext.Markas.Include(x=>x.Category).Where(x => x.Category.SubMenuID == id)
+                                 .Select(x=>new CategoryModel
+                                 { 
+                                     ID = x.Id,
+                                     Name = $"{x.Name} ({x.Category.Name})",
+                                     CategoryName = x.Category.Name,
+                                     SubMenuId = id,
+                                     CategoryId = x.CategoryId
+                                 }).ToList();
+            var model = PagingList.Create(
+                            _dbContext.Products
+                            .Include(x=>x.Model)
+                            .ThenInclude(x=>x.Marka)
+                            .ThenInclude(x=>x.Category)
+                            .ThenInclude(x=>x.SubMenu)
+                            .ThenInclude(x=>x.Menu)
+                            .Include(x=>x.Pictures)
+                            .Where(x=>x.Model.Marka.Category.SubMenu.Id==id).ToList()??new List<Product>(), 6, page);
+            
+            model.Action = "Index";
+
+            return View("Views/Product/Index.cshtml", model);
         }
         public IActionResult OrdersList()
         {
@@ -106,15 +128,33 @@ namespace MozambikMVC.Controllers
          => View(_dbContext.Products.Include(x => x.Properties).
                             Include(x => x.Model).ThenInclude(x => x.Marka).ThenInclude(x=>x.Category).
                             Include(x=>x.Pictures).FirstOrDefault(x=>x.Id==id));
-        [HttpPost]
-        public IActionResult Search(string Search)
-            =>View("SearchResult",_dbContext
-                .Products.Include(x => x.Model).ThenInclude(x => x.Marka)
-                .Where(x => x.Name.ToLower().Contains(Search.ToLower())||
-                x.Model.Name.ToLower().Contains(Search.ToLower())||
-                x.Model.Marka.Name.ToLower().Contains(Search.ToLower()))
-                .Include(x=>x.Pictures)
-                .ToList());
+        
+        public IActionResult Search(int? send,int? price,int id,int page=1)
+        {
+            ViewBag.Markas = _dbContext.Markas.Include(x => x.Category).Where(x => x.Category.SubMenuID == id)
+                                .Select(x => new CategoryModel
+                                {
+                                    ID = x.Id,
+                                    Name = $"{x.Name} ({x.Category.Name})",
+                                    CategoryName = x.Category.Name,
+                                    SubMenuId = id,
+                                    CategoryId = x.CategoryId
+                                }).ToList();
+            var model = PagingList.Create(
+                            _dbContext.Products
+                            .Include(x => x.Model)
+                            .ThenInclude(x => x.Marka)
+                            .ThenInclude(x => x.Category)
+                            .ThenInclude(x => x.SubMenu)
+                            .ThenInclude(x => x.Menu)
+                            .Include(x => x.Pictures)
+                            .Where(x => (x.Price-(x.Price*x.Discount/100)>=price&& (x.Price - (x.Price * x.Discount / 100)) <= (price+100))||
+                                        (x.Model.MarkaID==send)), 6, page);
+
+            model.Action = "Search";
+
+            return View("Views/Product/Index.cshtml", model);
+        }
         
         //public IActionResult SearchResult(List<Product> products)
         //{

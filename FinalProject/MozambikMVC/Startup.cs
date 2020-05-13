@@ -87,14 +87,13 @@ namespace MozambikMVC
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapAreaControllerRoute(
-                      areaName: "Jungle",
+                endpoints.MapControllerRoute(
                        name: "Jungle",
                       pattern: "{area:exists}/{controller}/{action}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "default",    
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-               
+
             });
         }
     }

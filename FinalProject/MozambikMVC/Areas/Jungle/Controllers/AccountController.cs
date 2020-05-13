@@ -53,7 +53,7 @@ namespace MozambikMVC.Areas.Jungle.Controllers
                         }
                     }
 
-                    return RedirectToAction("Index", "Abouts", new { Area = "Jungle" });
+                    return RedirectToAction("Index", "Abouts", new { area = "Jungle" });
 
                 }
                 catch
@@ -62,12 +62,12 @@ namespace MozambikMVC.Areas.Jungle.Controllers
                    
                 }
             }
-            return RedirectToAction("Login","Account",new { Area = "Jungle" });
+            return RedirectToAction("Login","Account",new { area = "Jungle" });
         }
         public IActionResult LogOut()
         {
             _maneger.SignOutAsync().GetAwaiter().GetResult();
-            return RedirectToAction("Login", "Account", new { Area = "Jungle" });
+            return RedirectToAction("Login", "Account", new { area = "Jungle" });
 
         }
     }
